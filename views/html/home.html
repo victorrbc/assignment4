@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div class="h-screen flex">
+        <div class="flex w-1/2 bg-gradient-to-tr from-blue-800 to-purple-700 i justify-around items-center">
+          <div>
+            <h1 class="text-white font-bold text-4xl font-sans">List of users : </h1>
+            <div class="flex flex-col">
+                <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+                  <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+                    <div class="overflow-hidden">
+                      <table id="table_users" class="min-w-full">
+                        <thead >
+                          <tr>
+                            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                              #
+                            </th>
+                            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                              Email
+                            </th>
+                            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                              Name
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                      </table>
+                      <button onclick='return ajaxUpdateTable();' class="block w-full bg-indigo-600 mt-4 py-2 rounded-2xl text-white font-semibold mb-2">Refresh</button>
+                    </div>
+                  </div>
+                </div>
+              </div> 
+          </div>
+        </div>
+        <script>
+          function ajaxUpdateTable(){
+              var xhttp = new XMLHttpRequest();
+              xhttp.onreadystatechange = function (){
+                if (this.readyState==4 && this.status == 201){
+                  $("#table_users tbody").empty();
+                  var res = JSON.parse(this.response);
+                  for (var i = 0; i < res.length; i++) {
+                    var id = res[i].id;
+                    var name  = res[i].name;
+                    var email = res[i].email;
+                    $('#table_users tbody').append('<tr><td>'+id+'</td><td>'+name+'</td><td>'+email+'</td></tr>')
+                  }
+                }
+              }
+              xhttp.open("GET", "http://localhost:3000/users", true);
+              xhttp.send();
+              return false;
+            }
+        </script>
+        <div class="flex flex-col w-1/2 justify-center items-center bg-white">
+          <form onsubmit="return ajaxAddDb();" id="addForm" class="bg-white" >
+            <h1 class="text-gray-800 font-bold text-2xl mb-1">Create new user</h1>
+            <div class="flex items-center border-2 py-2 px-3 rounded-2xl mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-at" viewBox="0 0 16 16">
+                    <path d="M13.106 7.222c0-2.967-2.249-5.032-5.482-5.032-3.35 0-5.646 2.318-5.646 5.702 0 3.493 2.235 5.708 5.762 5.708.862 0 1.689-.123 2.304-.335v-.862c-.43.199-1.354.328-2.29.328-2.926 0-4.813-1.88-4.813-4.798 0-2.844 1.921-4.881 4.594-4.881 2.735 0 4.608 1.688 4.608 4.156 0 1.682-.554 2.769-1.416 2.769-.492 0-.772-.28-.772-.76V5.206H8.923v.834h-.11c-.266-.595-.881-.964-1.6-.964-1.4 0-2.378 1.162-2.378 2.823 0 1.737.957 2.906 2.379 2.906.8 0 1.415-.39 1.709-1.087h.11c.081.67.703 1.148 1.503 1.148 1.572 0 2.57-1.415 2.57-3.643zm-7.177.704c0-1.197.54-1.907 1.456-1.907.93 0 1.524.738 1.524 1.907S8.308 9.84 7.371 9.84c-.895 0-1.442-.725-1.442-1.914z"/>
+                </svg>
+              <input class="pl-2 outline-none border-none" type="text" name="email" id="email" placeholder="Email" />
+            </div>
+            <div class="flex items-center border-2 py-2 px-3 rounded-2xl">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+                  </svg>
+                <input class="pl-2 outline-none border-none" type="text" name="name" id="name" placeholder="Name" />
+            </div>
+            <button type="submit" class="block w-full bg-indigo-600 mt-4 py-2 rounded-2xl text-white font-semibold mb-2">Create user</button>
+          </form>
+
+          <script>
+            function ajaxAddDb(){
+              var frm = $('#addForm');
+              console.log("yes");
+              console.log(frm.serialize());
+              $.ajax({
+                  type: "POST",
+                  url: "http://localhost:3000/users",
+                  data: frm.serialize(),
+                  statusCode:{
+                    201: function (response) {
+                      alert(JSON.stringify(response));
+                  }
+                }
+              });
+              return false;
+            }
+          </script>
+
+          <form onsubmit="return ajaxUpdateDb();" id="updateForm" class="bg-white">
+          </br>
+            <h1 class="text-gray-800 font-bold text-2xl mb-1">Update</h1>
+            <div class="flex items-center border-2 py-2 px-3 rounded-2xl mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-ol" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5z"/>
+                    <path d="M1.713 11.865v-.474H2c.217 0 .363-.137.363-.317 0-.185-.158-.31-.361-.31-.223 0-.367.152-.373.31h-.59c.016-.467.373-.787.986-.787.588-.002.954.291.957.703a.595.595 0 0 1-.492.594v.033a.615.615 0 0 1 .569.631c.003.533-.502.8-1.051.8-.656 0-1-.37-1.008-.794h.582c.008.178.186.306.422.309.254 0 .424-.145.422-.35-.002-.195-.155-.348-.414-.348h-.3zm-.004-4.699h-.604v-.035c0-.408.295-.844.958-.844.583 0 .96.326.96.756 0 .389-.257.617-.476.848l-.537.572v.03h1.054V9H1.143v-.395l.957-.99c.138-.142.293-.304.293-.508 0-.18-.147-.32-.342-.32a.33.33 0 0 0-.342.338v.041zM2.564 5h-.635V2.924h-.031l-.598.42v-.567l.629-.443h.635V5z"/>
+                  </svg>
+              <input class="pl-2 outline-none border-none" type="text" name="id" id="id" placeholder="Id" />
+            </div>
+            <div class="flex items-center border-2 py-2 px-3 rounded-2xl mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-at" viewBox="0 0 16 16">
+                    <path d="M13.106 7.222c0-2.967-2.249-5.032-5.482-5.032-3.35 0-5.646 2.318-5.646 5.702 0 3.493 2.235 5.708 5.762 5.708.862 0 1.689-.123 2.304-.335v-.862c-.43.199-1.354.328-2.29.328-2.926 0-4.813-1.88-4.813-4.798 0-2.844 1.921-4.881 4.594-4.881 2.735 0 4.608 1.688 4.608 4.156 0 1.682-.554 2.769-1.416 2.769-.492 0-.772-.28-.772-.76V5.206H8.923v.834h-.11c-.266-.595-.881-.964-1.6-.964-1.4 0-2.378 1.162-2.378 2.823 0 1.737.957 2.906 2.379 2.906.8 0 1.415-.39 1.709-1.087h.11c.081.67.703 1.148 1.503 1.148 1.572 0 2.57-1.415 2.57-3.643zm-7.177.704c0-1.197.54-1.907 1.456-1.907.93 0 1.524.738 1.524 1.907S8.308 9.84 7.371 9.84c-.895 0-1.442-.725-1.442-1.914z"/>
+                </svg>
+              <input class="pl-2 outline-none border-none" type="text" name="email" id="email" placeholder="Email" />
+            </div>
+            <div class="flex items-center border-2 py-2 px-3 rounded-2xl">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+                  </svg>
+                <input class="pl-2 outline-none border-none" type="text" name="name" id="name" placeholder="Name" />
+            </div>
+            <button type="submit" class="block w-full bg-indigo-600 mt-4 py-2 rounded-2xl text-white font-semibold mb-2">Update user</button>
+          </form>
+          <script>
+            function ajaxUpdateDb(){
+              var frm = $('#updateForm');
+              $.ajax({
+                  type: "PUT",
+                  url: "http://localhost:3000/users/"+frm.serializeArray()[0].value,
+                  data: {
+                    'email':frm.serializeArray()[1].value,
+                    'name':frm.serializeArray()[2].value
+                  },
+                  statusCode:{
+                    201: function (response) {
+                      alert(JSON.stringify(response));
+                  }
+                }
+              });
+              return false;
+            }
+          </script>
+
+          <form onsubmit="return ajaxDeleteDb();" id="deleteForm" class="bg-white">
+            </br>
+            <h1 class="text-gray-800 font-bold text-2xl mb-1">Delete</h1>
+            <div class="flex items-center border-2 py-2 px-3 rounded-2xl mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-ol" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5z"/>
+                    <path d="M1.713 11.865v-.474H2c.217 0 .363-.137.363-.317 0-.185-.158-.31-.361-.31-.223 0-.367.152-.373.31h-.59c.016-.467.373-.787.986-.787.588-.002.954.291.957.703a.595.595 0 0 1-.492.594v.033a.615.615 0 0 1 .569.631c.003.533-.502.8-1.051.8-.656 0-1-.37-1.008-.794h.582c.008.178.186.306.422.309.254 0 .424-.145.422-.35-.002-.195-.155-.348-.414-.348h-.3zm-.004-4.699h-.604v-.035c0-.408.295-.844.958-.844.583 0 .96.326.96.756 0 .389-.257.617-.476.848l-.537.572v.03h1.054V9H1.143v-.395l.957-.99c.138-.142.293-.304.293-.508 0-.18-.147-.32-.342-.32a.33.33 0 0 0-.342.338v.041zM2.564 5h-.635V2.924h-.031l-.598.42v-.567l.629-.443h.635V5z"/>
+                    </svg>
+                <input class="pl-2 outline-none border-none" type="text" name="id" id="id" placeholder="Id" />
+            </div>
+            <button type="submit" class="block w-full bg-indigo-600 mt-4 py-2 rounded-2xl text-white font-semibold mb-2">Delete user</button>
+            </form>
+            <script>
+              function ajaxDeleteDb(){
+                var frm = $('#deleteForm');
+                $.ajax({
+                    type: "DELETE",
+                    url: "http://localhost:3000/users/"+frm.serializeArray()[0].value,
+                    statusCode:{
+                      201: function (response) {
+                        alert(JSON.stringify(response));
+                    }
+                  }
+                });
+                return false;
+              }
+            </script>
+        </div>
+      </div>
+</body>
+</html>
