@@ -83,8 +83,6 @@
           <script>
             function ajaxAddDb(){
               var frm = $('#addForm');
-              console.log("yes");
-              console.log(frm.serialize());
               $.ajax({
                   type: "POST",
                   url: "http://localhost:3000/users",

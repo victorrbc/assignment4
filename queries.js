@@ -64,7 +64,6 @@ const updateUser = (request, response) => {
 const deleteUser = (request, response) => {
     const id = parseInt(request.params.id)
     db.query('DELETE FROM users WHERE id = $1', [id], (error, results) => {
-        console.log(error, results)
         if (error) {
             response.status(error.status)
         }
